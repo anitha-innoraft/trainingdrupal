@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\core\Logger\LoggerChannelFactoryInterface;
 
 /**
  * Provides a 'Temperature' Block.
@@ -19,9 +20,22 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Temperatureblock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
+   * An http client.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $httpClient;
+
+  /**
+   * Expection Handling.
+   *
+   * @var \Drupal\core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $logger;
+  /**
    * Object variable.
    *
-   * @var object
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configfactory;
 
@@ -36,11 +50,17 @@ class Temperatureblock extends BlockBase implements ContainerFactoryPluginInterf
    *   It returns the plugin definition.
    * @param Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   It returns the object.
+   * @param \GuzzleHttp\Client $http_client
+   *   An HTTP client.
+   * @param Drupal\core\Logger\LoggerChannelFactoryInterface $logger
+   *   Exception handling variable.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, Client $http_client, LoggerChannelFactoryInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->configfactory = $config_factory;
+    $this->httpclient = $http_client;
+    $this->logger = $logger;
   }
 
   /**
@@ -52,6 +72,8 @@ class Temperatureblock extends BlockBase implements ContainerFactoryPluginInterf
       $plugin_id,
       $plugin_definition,
       $container->get('config.factory'),
+      $container->get('http_client'),
+      $container->get('logger.factory')
     );
   }
 
@@ -70,20 +92,19 @@ class Temperatureblock extends BlockBase implements ContainerFactoryPluginInterf
     $apiendpoint = $config->get('apiendpoint');
     $client = new Client();
     $service_url = "https://" . $apiendpoint . '?q=' . $city . ',' . $country . '&appid=' . $apikey;
-    $response = $client->get($service_url);
-    $output = json_decode($response->getBody(), TRUE);
-    // print_r($output);exit;
-    // $curl = curl_init($service_url);
-    // curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-    // curl_setopt($curl, CURLOPT_POST, FALSE);
-    // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-    // $curl_response = curl_exec($curl);
-    // curl_close($curl);
-    // $output = json_decode($curl_response);
-    return [
-      '#markup' => $this->t('The temperature of the @city is : @numberK',
-      ['@city' => $city, '@number' => $output['main']['temp']]),
-    ];
+    try {
+      $response = $this->httpclient->get($service_url);
+      $output = json_decode($response->getBody(), TRUE);
+      return [
+        '#markup' => $this->t(
+          'The temperature of the @city is : @numberK',
+          ['@city' => $city, '@number' => $output['main']['temp']]
+        ),
+      ];
+    }
+    catch (\Exception $e) {
+      $this->logger->get('widget')->error($e->getMessage());
+    }
   }
 
   /**

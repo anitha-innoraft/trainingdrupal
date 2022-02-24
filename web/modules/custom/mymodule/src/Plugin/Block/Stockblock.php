@@ -3,10 +3,13 @@
 namespace Drupal\mymodule\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 use GuzzleHttp\Client;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\core\Logger\LoggerChannelFactoryInterface;
 
+const APIURL = "https://api.tiingo.com/tiingo/daily/";
 /**
  * Provides a 'Stock' Block.
  *
@@ -15,7 +18,54 @@ use GuzzleHttp\Client;
  *   admin_label = @Translation("Stock block"),
  * )
  */
-class Stockblock extends BlockBase implements BlockPluginInterface {
+class Stockblock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * An http client.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $httpClient;
+
+  /**
+   * Expection Handling.
+   *
+   * @var \Drupal\core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $logger;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('http_client'),
+      $container->get('logger.factory')
+    );
+  }
+
+  /**
+   * Construct.
+   *
+   * @param array $configuration
+   *   Plugin Configurations.
+   * @param mixed $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \GuzzleHttp\Client $http_client
+   *   An HTTP client.
+   * @param Drupal\core\Logger\LoggerChannelFactoryInterface $logger
+   *   Exception handling variable.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Client $http_client, LoggerChannelFactoryInterface $logger) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->httpclient = $http_client;
+    $this->logger = $logger;
+  }
 
   /**
    * Method to return the values to block.
@@ -27,14 +77,14 @@ class Stockblock extends BlockBase implements BlockPluginInterface {
     $config = $this->getConfiguration();
 
     $company_symbol = $config['company_symbol'];
-    $start_date = empty($config['start_date']) ? date('Y-m-d') : $config['start_date'];
-    $end_date = empty($config['end_date']) ? date('Y-m-d') : $config['end_date'];
+    $start_date = empty($config['start_date']) ?: date('Y-m-d');
+    $end_date = empty($config['end_date']) ?: date('Y-m-d');
     // $start_date ='2022-2-15';
     // $end_date = '2022-2-15';
-    $service_url = "https://api.tiingo.com/tiingo/daily/" . $company_symbol . "?token=34f412d51db4046a81f4180aad2233c41df5d3b1";
+    $service_url = APIURL . $company_symbol . "?token=34f412d51db4046a81f4180aad2233c41df5d3b1";
     $output = $this->curlResponse($service_url);
 
-    $price_url = "https://api.tiingo.com/tiingo/daily/" . $company_symbol . "/prices?startDate=" . $start_date . "&endDate=" . $end_date . "&token=34f412d51db4046a81f4180aad2233c41df5d3b1";
+    $price_url = APIURL . $company_symbol . "/prices?startDate=" . $start_date . "&endDate=" . $end_date . "&token=34f412d51db4046a81f4180aad2233c41df5d3b1";
     $priceoutput = $this->curlResponse($price_url);
 
     $pricedetails = "";
@@ -123,17 +173,14 @@ class Stockblock extends BlockBase implements BlockPluginInterface {
    *   Return objectarray.
    */
   public function curlResponse($service_url) {
-    // $curl = curl_init($service_url);
-    // curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-    // curl_setopt($curl, CURLOPT_POST, FALSE);
-    // curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
-    // $curl_response = curl_exec($curl);
-    // curl_close($curl);
-    // $output = json_decode($curl_response);
-    $client = new Client();
-    $response = $client->get($service_url);
-    $output = json_decode($response->getBody(), TRUE);
-    return $output;
+    try {
+      $response = $this->httpclient->get($service_url);
+      $output = json_decode($response->getBody(), TRUE);
+      return $output;
+    }
+    catch (\Exception $e) {
+      $this->logger->get('widget')->error($e->getMessage());
+    }
   }
 
 }
