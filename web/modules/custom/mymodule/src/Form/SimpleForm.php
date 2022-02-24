@@ -16,7 +16,7 @@ class SimpleForm extends FormBase {
   /**
    * Messenger variable.
    *
-   * @var object
+   * @var \Drupal\Core\Messenger\MessengerInterface
    */
   protected $messenger;
 
@@ -47,25 +47,14 @@ class SimpleForm extends FormBase {
   }
 
   /**
-   * Get the formid function.
-   *
-   * @return string
-   *   It return the formid.
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'Simple_Form';
   }
 
   /**
-   * Buildform function to create a form fields.
-   *
-   * @param array $form
-   *   It return the form fields as array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   It return the stored values of form.
-   *
-   * @return array
-   *   Form is returned as array.
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
@@ -75,9 +64,9 @@ class SimpleForm extends FormBase {
       $country_name = (string) $value;
       $country_array[$country_name] = $country_name;
     }
-    $formValues = $form_state->get('storelocations');
-    if (empty($formValues)) {
-      $formValues = $form_state->set('storelocations', 1);
+    $num_locations = $form_state->get('storelocations');
+    if (empty($num_locations)) {
+      $num_locations = $form_state->set('storelocations', 1);
     }
 
     $form['country'] = [
@@ -92,8 +81,8 @@ class SimpleForm extends FormBase {
       '#prefix' => '<div id="locations">',
       '#suffix' => '</div>',
     ];
-    if ($formValues) {
-      for ($i = 0; $i < $formValues; $i++) {
+    if ($num_locations) {
+      for ($i = 0; $i < $num_locations; $i++) {
         $form['locations'][$i] = [
           '#type' => 'fieldset',
           '#tree' => TRUE,
@@ -141,19 +130,14 @@ class SimpleForm extends FormBase {
    * Custom function to increment the value of fieldset and stored in formstate.
    */
   public function addOne(array &$form, FormStateInterface $form_state) {
-    $formValues = $form_state->get('storelocations');
-    $add_button = $formValues + 1;
+    $num_locations = $form_state->get('storelocations');
+    $add_button = $num_locations + 1;
     $form_state->set('storelocations', $add_button);
     $form_state->setRebuild();
   }
 
   /**
-   * Validate the form using below function.
-   *
-   * @param array $form
-   *   It will return the form field as array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Get the field values using that variable.
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
@@ -177,12 +161,7 @@ class SimpleForm extends FormBase {
   }
 
   /**
-   * Submit form function to display the submitted values.
-   *
-   * @param array $form
-   *   It will return the form field as array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Get the field values using that variable.
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $country = $form_state->getValue('country');

@@ -11,10 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 class MymoduleSettingsForm extends ConfigFormBase {
 
   /**
-   * Method to call the module settings.
-   *
-   * @return array
-   *   It will return the array of settings.
+   * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
     return [
@@ -23,25 +20,14 @@ class MymoduleSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Method to call the formid.
-   *
-   * @return string
-   *   It will return the form id.
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'Settings_Form';
   }
 
   /**
-   * Buildform method to create the form.
-   *
-   * @param array $form
-   *   It will return the form fields.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Get the stored values of form fields.
-   *
-   * @return object
-   *   Return the form.
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
@@ -76,12 +62,7 @@ class MymoduleSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Method to save the form values.
-   *
-   * @param array $form
-   *   It will return the form fields.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Get the stored values of form fields.
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('mymodule.settings')
