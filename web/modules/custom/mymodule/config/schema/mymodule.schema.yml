@@ -1,0 +1,16 @@
+mymodule.settings:
+  type: config_object
+  label: 'Mymodule settings'
+  mapping:
+    country:
+      type: string
+      label: "Country"
+    city:
+      type: string
+      label: "Weather of the city"
+    apikey:
+      type: string
+      label: "Apikey of the weather api"
+    apiendpoint:
+      type: string
+      label: "Api endpoint of weather api"

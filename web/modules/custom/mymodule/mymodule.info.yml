@@ -1,0 +1,6 @@
+name: Mymodule Form
+description: Creating a module for form api
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+configure: mymodule.settings

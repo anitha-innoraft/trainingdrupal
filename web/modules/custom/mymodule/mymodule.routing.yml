@@ -1,0 +1,14 @@
+mymodule.settings:
+  path: '/mymodule/config'
+  defaults:
+    _form: '\Drupal\mymodule\Form\MymoduleSettingsForm'
+    _title: 'Mymodule'
+  requirements:
+    _permission: 'administer content'
+mymodule.simple:
+  path: '/mymodule/simple'
+  defaults:
+    _form: '\Drupal\mymodule\Form\SimpleForm'
+    _title: 'Mymodule'
+  requirements:
+    _permission: 'administer mymodule configuration'
