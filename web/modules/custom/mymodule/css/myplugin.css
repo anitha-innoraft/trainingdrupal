@@ -1,0 +1,45 @@
+/*
+    Ratings Stars
+    (with as little code as possible)
+*/
+/* .rating {
+  unicode-bidi: bidi-override;
+  font-size: 2em
+}
+.rating > span {
+  display: inline-block;
+  position: relative;
+  width: 1.1em;
+}
+.rating > span.active {
+  color: transparent;
+}
+.rating > span.active:before {
+   content: "\2605";
+   position: absolute;
+   left: 0;
+   color: gold;
+} */
+.star {
+    font-size: x-large;
+    width: 50px;
+    display: inline-block;
+    color: gray;
+}
+.star:last-child {
+    margin-right: 0;
+}
+.star:before {
+    content:'\2605';
+}
+.star.on {
+    color: gold;
+}
+.star.half:after {
+    content:'\2605';
+    color: gold;
+    position: absolute;
+    margin-left: -20px;
+    width: 10px;
+    overflow: hidden;
+}

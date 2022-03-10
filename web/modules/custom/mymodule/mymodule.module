@@ -1,23 +1,6 @@
 <?php
 
-/**
- * @file
- * Module file of custom module.
- */
 
-/**
- * Function to alter the module to restrict the page.
- *
- * @param object $form
- *   It will give the $form data.
- * @param FormStateInterface $form_state
- *   It will retrieve the form values.
- * @param object $form_id
- *   It will return the form_id.
- */
-function mymodule_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-
-  if (\Drupal::currentUser()->hasPermission('administer mymodule configuration')) {
-    return;
-  }
+function myplugin_preprocess_page(&$variables) {
+  $variables['#attached']['library'][] = 'myplugin/myplugin';
 }
