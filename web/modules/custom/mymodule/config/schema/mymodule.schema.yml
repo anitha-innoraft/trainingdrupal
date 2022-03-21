@@ -14,3 +14,6 @@ mymodule.settings:
     apiendpoint:
       type: string
       label: "Api endpoint of weather api"
+action.configuration.mymodule:
+  type: featured_node_action
+  label: 'Featured Node'
