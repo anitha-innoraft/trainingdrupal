@@ -4,7 +4,6 @@ namespace Drupal\myplugin\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -61,8 +60,6 @@ class FeaturedNodeAction extends ActionBase implements ContainerFactoryPluginInt
    */
   public function execute($node = NULL) {
     if ($node) {
-      $nid = $node->id();
-      $node = Node::load($nid);
       $node->field_feaured_node = 1;
       $node->save();
 
