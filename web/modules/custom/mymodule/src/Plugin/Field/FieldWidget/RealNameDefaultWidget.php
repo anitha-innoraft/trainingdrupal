@@ -25,14 +25,14 @@ class RealNameDefaultWidget extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element['first_name'] = [
       '#type' => 'textfield',
-      '#title' => 'First Name',
+      '#title' => t('First Name'),
       '#default_value' => empty($items[$delta]->first_name) ? NULL : $items[$delta]->first_name,
       '#required' => TRUE,
     ];
 
     $element['last_name'] = [
       '#type' => 'textfield',
-      '#title' => 'Last Name',
+      '#title' => t('Last Name'),
       '#default_value' => empty($items[$delta]->last_name) ? NULL : $items[$delta]->last_name,
       '#required' => TRUE,
     ];
