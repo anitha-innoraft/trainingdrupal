@@ -40,6 +40,7 @@ class StarRating extends FormatterBase {
       $element[$delta] = ['#markup' => '<div class="stars">' . $highlighted_stars . $half_star . $normal_stars . '</div>'];
 
     }
+    $element['#attached']['library'][] = 'myplugin/myplugin';
     return $element;
   }
 

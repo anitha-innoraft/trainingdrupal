@@ -5,7 +5,7 @@
  * Module file of custom module.
  */
 
-function myplugin_preprocess_page(&$variables) {
-  $variables['#attached']['library'][] = 'myplugin/myplugin';
-}
+// function myplugin_preprocess_page(&$variables) {
+//   $variables['#attached']['library'][] = 'myplugin/myplugin';
+// }
 
