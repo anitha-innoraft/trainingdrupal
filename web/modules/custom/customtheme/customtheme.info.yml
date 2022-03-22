@@ -1,0 +1,10 @@
+name: Custom Theme module
+description: Creating a module for css
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+libraries:
+  - customtheme/customthemecss
+  - customtheme/customthemejs
+dependencies:
+  - drupal:block
