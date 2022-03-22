@@ -1,0 +1,6 @@
+myplugin:
+  version: 1.x
+  css:
+    theme:
+        css/myplugin.css: {}
+

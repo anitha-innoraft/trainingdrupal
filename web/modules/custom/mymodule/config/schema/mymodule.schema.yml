@@ -14,3 +14,18 @@ mymodule.settings:
     apiendpoint:
       type: string
       label: "Api endpoint of weather api"
+action.configuration.mymodule:
+  type: featured_node_action
+  label: 'Featured Node'
+realname.settings:
+  type: config_object
+  label: 'Realname settings'
+  mapping:
+    first_name:
+      type: char
+      label: "Firstname"
+      length: 255
+    last_name:
+      type: char
+      label: "Lastname"
+      length: 255
