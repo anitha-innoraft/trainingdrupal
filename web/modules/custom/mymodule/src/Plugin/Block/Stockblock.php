@@ -95,13 +95,10 @@ class Stockblock extends BlockBase implements ContainerFactoryPluginInterface {
 
     }
     return [
-      '#type' => 'inline_template',
-      '#template' => "{% trans %}<strong> Stock Information: </strong><br/>{% endtrans %} {{stockname | raw }} {{stockdesc | raw }} {{pricedetails | raw }}",
-      '#context' => [
-        'stockname' => '<strong>Stock Name:</strong>' . $output['name'] . '<br/>',
-        'stockdesc' => '<strong>Stock Description:</strong>' . $output['description'] . '<br/>',
-        'pricedetails' => '<strong>Price Details:</strong><br/>' . $pricedetails . '<br/>',
-      ],
+      '#theme' => 'stock_template',
+      '#stockname' => $output['name'],
+      '#stockdesc' => $output['description'],
+      '#pricedetails' => $pricedetails,
     ];
   }
 
