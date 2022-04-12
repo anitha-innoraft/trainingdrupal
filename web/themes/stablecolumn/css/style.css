@@ -1,0 +1,12 @@
+aside.layout-sidebar-first {
+    display: inline-block;
+    width: 25%;
+}
+.layout-content {
+    display: inline-block;
+    width: 49%;
+}
+aside.layout-sidebar-second {
+    display: inline-block;
+    width: 25%;
+}

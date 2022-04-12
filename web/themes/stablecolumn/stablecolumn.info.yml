@@ -1,0 +1,12 @@
+name: Stablecolumn
+type: theme
+base theme: stable
+description: Create 3 column
+core: 8.x
+core_version_requirement: ^8 || ^9
+libraries:
+  - stablecolumn/global-styling
+regions:
+  sidebar_first: 'Sidebar first'
+  content: Content
+  sidebar_second: 'Sidebar second'
