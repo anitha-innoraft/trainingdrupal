@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Module file of custom module.
+ */
+
+/**
+* Implements hook_theme().
+*/
+function mymodule_theme($existing, $type, $theme, $path) {
+  return [
+    'stock_template' => [
+    'variables' => ['stockname' => NULL, 'stockdesc' => NULL, 'pricedetails' => NULL],
+    ],
+  ];
+}

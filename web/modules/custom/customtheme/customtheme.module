@@ -1,0 +1,12 @@
+<?php
+
+function customtheme_preprocess_page(&$variables) {
+$variables['#attached']['library'][] = 'customtheme/customthemecss';
+}
+
+function customtheme_preprocess_block(&$variables) {
+  if ($variables['elements']['#id'] == 'tableblock') {
+    // $theme = \Drupal::theme()->getActiveTheme()->getName();
+    $variables['#attached']['library'][] = 'customtheme/customthemejs';
+  }
+}
